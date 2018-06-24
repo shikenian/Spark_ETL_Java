@@ -1,1 +1,14 @@
---首先把Python script执行，生成JSON文件
+#首先把Python script执行，生成JSON文件
+/* generate Json file from FLD */
+python FLD_excel_to_json.py -f /project/cfmp/conf/FLD.xlsx -t /project/cfmp/conf/fld_json
+
+
+#把batch数据插入到数据库中
+/* start new batch jobs */
+python /project/cfmp/libs/metaAPI/ops_begin_batch.py -batch_name daily_batch -batch_description "daily ETL" -batch_type ETL
+
+
+#把file信息插入到数据库中
+/* start file register */
+/* add file name into record_filename.txt */
+spark-submit --master local  --deploy-mode client --driver-memory 1g --executor-memory 8g --executor-cores 2  register_datafile.py
