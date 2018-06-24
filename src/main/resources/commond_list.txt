@@ -1,0 +1,1 @@
+--首先把Python script执行，生成JSON文件
