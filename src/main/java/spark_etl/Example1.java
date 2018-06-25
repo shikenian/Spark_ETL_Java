@@ -19,7 +19,9 @@ public class Example1 {
 		// Create the Java Spark Session by setting application name
 		// and master node "local".
 		try (final SparkSession spark = SparkSession.builder().master("local").appName("JavaLocalWordCount")
-				.getOrCreate()) {
+				.getOrCreate()
+
+		) {
 
 			// Create list of content (the summary of apache spark's README.md)
 			final List<String> content = Arrays.asList(
