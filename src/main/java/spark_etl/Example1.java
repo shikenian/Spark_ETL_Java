@@ -31,7 +31,8 @@ public class Example1 {
 					"and Spark Streaming for stream processing.");
 
 			// Split the content into words, convert words to key, value with
-			// key as word and value 1, and finally count the occurrences of a word
+			// key as word and value 1, and finally count the occurrences of a
+			// word
 			@SuppressWarnings("resource")
 			final Map<String, Long> wordsCount = new JavaSparkContext(spark.sparkContext()).parallelize(content)
 					.flatMap((x) -> Arrays.asList(x.split(" ")).iterator())
