@@ -1,5 +1,9 @@
 /**
- * 简单测试Spark 创建dataset，读取文本文件等简单的处理过程
+ * 测试：
+ * 1：从文本文件建立dataset
+ * 2：统计dataset中数据信息
+ * 3：使用DataFrame，以表格的方式操作结构化的文件，比如CSV格式的文件。
+ * 4：
  */
 
 
@@ -8,7 +12,7 @@ package spark_etl;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-
+import static org.apache.spark.sql.functions.col;
 
 
 public class Example2 {
@@ -32,7 +36,13 @@ public class Example2 {
 
 	private static void testShow(Dataset<Row> dataset) {
 		System.out.println("--------------------begin testShow--------------------------");
-		dataset.show();
+		System.out.println("print the dataset schema");
+		dataset.printSchema();
+		System.out.println("print one column of dataset");
+		dataset.select("name").show();
+		System.out.println("select every body but do some operate on the head");
+		dataset.select(col("name").alias("simplename")).show();
+		
 		System.out.println("--------------------end--------------------------");
 	}
 
