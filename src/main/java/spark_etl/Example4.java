@@ -14,7 +14,9 @@
 
 package spark_etl;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
@@ -22,6 +24,9 @@ import org.apache.spark.sql.Encoder;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 
 public class Example4 {
 
@@ -88,11 +93,26 @@ public class Example4 {
 	 * 使用Encoder对象后，可以把文件的每一行封装到一个对象中，这个时候就可以对这个对象进行长度的控制等操作。当然，如果是大文件，
 	 * 我想这个时候得考虑到对象太多是否会占用太多的内存空间的问题。
 	 * 
+	 * 当读取一个文件的时候，需要为这个文件设置一个schema，那么需要在DataFrameReader的方法中进行设置
+	 * 当然如果从一个RDD转换成个DataFrame的时候，也可以直接把StructType类传递过去，创建一个RDD
+	 * 
 	 * @param spark
 	 * @param logFile
 	 */
 	private static void testPeopleEncoder(SparkSession spark, Encoder<People> encoder, String logFile) {
-		Dataset<People> peopleDataFrame = spark.read().option("header", true).csv(logFile).as(encoder);
+
+		List<StructField> fields = new ArrayList<>();
+		fields.add(DataTypes.createStructField("name", DataTypes.StringType, false));
+		fields.add(DataTypes.createStructField("sex", DataTypes.StringType, false));
+		fields.add(DataTypes.createStructField("age", DataTypes.IntegerType, false));
+		StructType structType = DataTypes.createStructType(fields);
+
+		Dataset<People> peopleDataFrame = spark.read().option("header", true).option("", "").schema(structType)
+				.csv(logFile).as(encoder);
+
+		System.out.println("print the schema of Dataset");
+		peopleDataFrame.printSchema();
+		System.out.println("foreach the dataset and print the people name");
 		peopleDataFrame.foreach(e -> System.out.println(e.getName()));
 	}
 
