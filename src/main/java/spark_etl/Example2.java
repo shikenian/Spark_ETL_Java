@@ -16,14 +16,12 @@ public class Example2 {
 
 	public static void main(String[] args) {
 		SparkSession spark = SparkSession.builder().appName("Example2").master("local").getOrCreate();
-		// String logFile =
-		// "C:/study/javaprojects/Spark_ETL_Java/src/main/resources/testfiles/example2_1.csv";
-		String logFile = "E:/bigdata/projects/Spark_ETL_Java/src/main/resources/testfiles/example2_1.csv";
+		
+		String logFile = Example2.class.getResource("/testfiles/example2_1.csv").getPath();
+		
 		Dataset<String> dataset = spark.read().textFile(logFile);
 
 		Dataset<Row> datasetCsv = spark.read().option("header", true).csv(logFile);
-		// Dataset<Row> df =
-		// spark.read().json("examples/src/main/resources/people.json");
 
 		testWordCount(dataset);
 

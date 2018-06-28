@@ -3,7 +3,6 @@ package spark_etl;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoder;
 import org.apache.spark.sql.Encoders;
-import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
 public class Example4 {
@@ -11,9 +10,9 @@ public class Example4 {
 	public static void main(String[] args) {
 
 		SparkSession spark = SparkSession.builder().appName("Example3").master("local").getOrCreate();
-		// String logFile =
-		// "C:/study/javaprojects/Spark_ETL_Java/src/main/resources/testfiles/example2_1.csv";
-		String logFile = "E:/bigdata/projects/Spark_ETL_Java/src/main/resources/testfiles/example3_1.csv";
+		
+		String logFile = Example4.class.getResource("/testfiles/example3_1.csv").getPath();
+		
 		testPeopleEncoder(spark, logFile);
 
 

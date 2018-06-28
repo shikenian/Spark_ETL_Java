@@ -14,9 +14,7 @@ import org.apache.spark.sql.SparkSession;
 public class Example3 {
 	public static void main(String[] args) {
 		SparkSession spark = SparkSession.builder().appName("Example3").master("local").getOrCreate();
-		// String logFile =
-		// "C:/study/javaprojects/Spark_ETL_Java/src/main/resources/testfiles/example2_1.csv";
-		String logFile = "E:/bigdata/projects/Spark_ETL_Java/src/main/resources/testfiles/example3_1.csv";
+		String logFile = Example1.class.getResource("/testfiles/example3_1.csv").getPath();
 
 		//设置指定CSV文件的第一行为表头，这一步先建立好表结构之类的
 		Dataset<Row> datasetCsv = spark.read().option("header", true).csv(logFile);
