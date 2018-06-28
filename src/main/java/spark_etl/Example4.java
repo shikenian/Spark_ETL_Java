@@ -38,6 +38,8 @@ public class Example4 {
 
 		Encoder<People> encoder = Encoders.bean(People.class);
 		// 读取文件成为一个Dataset，并且使用Encoder把每行内容转换为对象
+        // 手动设置Dataset的Schema，强制指定Column的类型
+        // 有两种方式，一种是使用RDD转成Dataset是指定Column类型；另外一种是直接使用DataFrameReader类来制定Schema类型
 		testPeopleEncoder(spark, encoder, logFile);
 
 		// 从一个List转换成为一个Dataset，这个过程需要Encoder对象的支持
