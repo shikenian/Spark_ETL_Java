@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.ForeachFunction;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoder;
 import org.apache.spark.sql.Encoders;
@@ -32,7 +33,7 @@ public class Example4 {
 
 	public static void main(String[] args) {
 
-		SparkSession spark = SparkSession.builder().appName("Example3").master("local").getOrCreate();
+		SparkSession spark = SparkSession.builder().appName("Example4").master("local").getOrCreate();
 
 		String logFile = Example4.class.getResource("/testfiles/example3_1.csv").getPath();
 
@@ -54,9 +55,9 @@ public class Example4 {
 	/**
 	 * 把一个RDD转换成为一个Dataset
 	 * 
-	 * @param spark
-	 * @param logFile
-	 * @param encoder
+	 * @param spark SparkSession的结果
+	 * @param logFile The path of source file
+	 * @param encoder The encoder that used to convert the source file to Object or encoder and decoder the Object to Byte or turn back
 	 */
 	private static void testRddToDataset(SparkSession spark, Encoder<People> encoder, String logFile) {
 		// Create a RDD base on the source file
@@ -115,7 +116,7 @@ public class Example4 {
 		System.out.println("print the schema of Dataset");
 		peopleDataFrame.printSchema();
 		System.out.println("foreach the dataset and print the people name");
-		peopleDataFrame.foreach(e -> System.out.println(e.getName()));
+		peopleDataFrame.foreach((ForeachFunction<People>) e -> System.out.println(e.getName()));
 	}
 
 	/**
