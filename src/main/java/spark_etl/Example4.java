@@ -110,7 +110,7 @@ public class Example4 {
 		fields.add(DataTypes.createStructField("age", DataTypes.IntegerType, false));
 		StructType structType = DataTypes.createStructType(fields);
 
-		Dataset<People> peopleDataFrame = spark.read().option("header", true).option("", "").schema(structType)
+		Dataset<People> peopleDataFrame = spark.read().option("header", true).schema(structType)
 				.csv(logFile).as(encoder);
 
 		System.out.println("print the schema of Dataset");
