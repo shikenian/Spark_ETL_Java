@@ -51,7 +51,7 @@ public class Example5 {
     public static void main(String[] args) {
 
         //首先注册一个Aggregation的类到我们的环境中，方便后期调用
-        SparkSession spark = SparkSession.builder().appName("Example3").master("local").getOrCreate();
+        SparkSession spark = SparkSession.builder().appName("Example5").master("local").getOrCreate();
         spark.udf().register("myAverage", new MyAverage()); //UDF 方法提供接口让我们定义自己的Aggregation函数
         //查找Source文件，并且定义好Encoder方便后期操作
         String logFile = Example5.class.getResource("/testfiles/example3_1.csv").getPath();
