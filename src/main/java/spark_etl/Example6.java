@@ -1,7 +1,11 @@
 /**
- * 测试Aggregation函数的另外一种实现方式，指定类型信息的方式。
+ * 测试Aggregation函数的另外一种实现方式，类型安全的实现方式。
  * <p>
- * Example5是非指定类型的，因此需要我们在Aggregation类的内部去做类型的指定转换等操作，但是如果使用了下面的方式的，就不需要做这种事情了。
+ * Example5是非指定类型的，因此需要我们在Aggregation类的内部去做类型的指定转换等操作。
+ * 如果我们制定了Buffer处理的类型的话,可以更加简单实现Aggregation操作，因为底层会帮我们把结果封装到对象中。
+ * 我们已知的是，Dataset中对象的存在方式是以字节码的方式存在的，所以相对来说比会比较节省空间。
+ * 这对于处理大批量的数据来说是一个比较重要的特性。
+ *
  */
 
 package spark_etl;
@@ -78,7 +82,9 @@ public class Example6 {
             this.lineNum = lineNum;
             this.totalAge = totalAge;
         }
-        public Average(){} //需要有个无参数的额构造函数
+
+        public Average() {
+        } //需要有个无参数的额构造函数
 
         private int lineNum;
         private int totalAge;
