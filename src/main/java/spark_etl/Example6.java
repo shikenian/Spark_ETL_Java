@@ -6,23 +6,38 @@
 
 package spark_etl;
 
-import org.apache.spark.Aggregator;
-import org.apache.spark.sql.Encoder;
-import org.apache.spark.sql.Encoders;
-import org.apache.spark.sql.SparkSession;
-import scala.Function1;
-import scala.Function2;
+import org.apache.spark.sql.expressions.Aggregator;
+import org.apache.spark.sql.*;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Example6 {
     public static void main(String[] args) {
         SparkSession spark = SparkSession.builder().appName("Example6").master("local").getOrCreate();
         String logFile = Example6.class.getResource("/testfiles/example3_1.csv").getPath();
 
+        List<StructField> fields = new ArrayList<>();
+        fields.add(DataTypes.createStructField("name", DataTypes.StringType, false));
+        fields.add(DataTypes.createStructField("sex", DataTypes.StringType, false));
+        fields.add(DataTypes.createStructField("age", DataTypes.IntegerType, false));
+        StructType structType = DataTypes.createStructType(fields);
+        Encoder<People3> encoder = Encoders.bean(People3.class);
+        Dataset<People3> peopleDataFrame = spark.read().option("header", true).schema(structType).csv(logFile).as(encoder);
 
+        MyAverage myAverage = new MyAverage();
 
-//        Encoder
+        Dataset<Double> dataResult = peopleDataFrame.select(myAverage.toColumn().name("average_age"));
+
+        System.out.println("Print the result schema");
+        dataResult.printSchema();
+        System.out.println("print the data result");
+        dataResult.show();
+
 
     }
 
@@ -63,6 +78,7 @@ public class Example6 {
             this.lineNum = lineNum;
             this.totalAge = totalAge;
         }
+        public Average(){} //需要有个无参数的额构造函数
 
         private int lineNum;
         private int totalAge;
@@ -89,16 +105,14 @@ public class Example6 {
     public static class MyAverage extends Aggregator<People3, Average, Double> {
 
 
-        public MyAverage(Function1<Average, Double> createCombiner, Function2<Double, Average, Double> mergeValue, Function2<Double, Double, Double> mergeCombiners) {
-            super(createCombiner, mergeValue, mergeCombiners);
-        }
-
         //初始化一个Average
+        @Override
         public Average zero() {
             return new Average(0, 0);
         }
 
-        //用于统计计算源文件的每一行信息，并且存放到缓存中
+        //用于统计计算源文件的每一行信息，并且存放到缓存中，类似Hadoop中的Map操作
+        @Override
         public Average reduce(Average buffer, People3 people) {
             buffer.setLineNum(buffer.getLineNum() + 1);
             buffer.setTotalAge(people.getAge() + buffer.getTotalAge());
@@ -106,6 +120,7 @@ public class Example6 {
         }
 
         //可能存在多线程的操作，因此需要把结果集合并的操作，这个是底层调用的方法
+        @Override
         public Average merge(Average b1, Average b2) {
             b1.setTotalAge(b2.getTotalAge() + b1.getTotalAge());
             b1.setLineNum(b2.getLineNum() + b1.getLineNum());
@@ -113,21 +128,25 @@ public class Example6 {
         }
 
         //最后执行的一个操作，是为了能够把Average里面得到的统计信息计算得到最终的结果
+        @Override
         public Double finish(Average reduction) {
             return (double) reduction.getTotalAge() / reduction.getLineNum();
         }
 
+        //该方法是用来告诉上层调用当前的Buffer的类型是什么样子
+        @Override
         public Encoder<Average> bufferEncoder() {
             return Encoders.bean(Average.class);
         }
 
+        //该方法是告诉上层调用输出的结果是什么类型
+        @Override
         public Encoder<Double> outputEncoder() {
             return Encoders.DOUBLE();
         }
 
 
     }
-
 
 
 }
