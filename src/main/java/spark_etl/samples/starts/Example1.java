@@ -1,4 +1,4 @@
-package spark_etl;
+package spark_etl.samples.starts;
 
 import java.util.Arrays;
 import java.util.List;

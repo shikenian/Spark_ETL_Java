@@ -34,7 +34,7 @@
  */
 
 
-package spark_etl;
+package spark_etl.samples.starts;
 
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.expressions.MutableAggregationBuffer;

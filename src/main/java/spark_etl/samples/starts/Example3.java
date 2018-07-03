@@ -5,7 +5,7 @@
  * 	GlobalView：作用域为所有session，可以跨session读取view中的数据
  */
 
-package spark_etl;
+package spark_etl.samples.starts;
 
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;

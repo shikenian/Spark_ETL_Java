@@ -8,7 +8,7 @@
  *
  */
 
-package spark_etl;
+package spark_etl.samples.starts;
 
 import org.apache.spark.sql.expressions.Aggregator;
 import org.apache.spark.sql.*;

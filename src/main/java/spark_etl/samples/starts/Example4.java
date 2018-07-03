@@ -12,7 +12,7 @@
  * 测试通过一个RDD构建一个dataset对象
  */
 
-package spark_etl;
+package spark_etl.samples.starts;
 
 import java.util.ArrayList;
 import java.util.Collections;

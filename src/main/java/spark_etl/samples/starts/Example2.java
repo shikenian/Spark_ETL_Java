@@ -5,8 +5,9 @@
  * 3：使用DataFrame，以表格的方式操作结构化的文件，比如CSV格式的文件。
  */
 
-package spark_etl;
+package spark_etl.samples.starts;
 
+import org.apache.spark.api.java.function.FilterFunction;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -55,8 +56,8 @@ public class Example2 {
 	 */
 	private static void testWordCount(Dataset<String> dataset) {
 		System.out.println("--------------------begin testWordCount--------------------------");
-		long numAs = dataset.filter(s -> s.contains("a")).count();
-		long numBs = dataset.filter(s -> s.contains("b")).count();
+		long numAs = dataset.filter((FilterFunction<String>) s -> s.contains("a")).count();
+		long numBs = dataset.filter((FilterFunction<String>) s -> s.contains("b")).count();
 
 		System.out.println("the number of lines contains a is : " + numAs);
 		System.out.println("the number of lines contains b is : " + numBs);
